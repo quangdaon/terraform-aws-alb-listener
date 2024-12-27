@@ -16,13 +16,35 @@ resource "aws_lb_target_group" "target_group" {
   }
 }
 
+resource "aws_lb_listener_rule" "http_rule" {
+  listener_arn = var.quinfrastructure.alb_http_listener_arn
 
-resource "aws_lb_listener" "https_forward" {
-  load_balancer_arn = var.quinfrastructure.alb_arn
-  port              = 80
-  protocol          = "HTTP"
+  condition {
+    host_header {
+      values = [var.hostname]
+    }
+  }
 
-  default_action {
+  action {
+    type = "redirect"
+    redirect {
+      port        = 443
+      protocol    = "HTTPS"
+      status_code = "HTTP_302"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "https_rule" {
+  listener_arn = var.quinfrastructure.alb_https_listener_arn
+
+  condition {
+    host_header {
+      values = [var.hostname]
+    }
+  }
+
+  action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.target_group.arn
   }
