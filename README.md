@@ -7,10 +7,11 @@ This module is designed to be compatible with my "[quinfrastructure](https://git
 ```hcl
 module "my_app_alb" {
   source  = "app.terraform.io/Quangdao/alb-listener/aws"
-  version = "0.0.4"
+  version = "0.0.5"
 
   quinfrastructure  = data.tfe_outputs.core.values
   name              = "my-app"
+  hostname          = "myapp.example.com"
   health_check_path = "/health" # Optional / defaults to "/"
 }
 ```
