@@ -22,7 +22,7 @@ variable "http_mode" {
   default = "forward"
   validation {
     condition     = contains(["allow", "forward", "reject"], var.http_mode)
-    error_message = "http_mode must be on of: allow, forward, reject"
+    error_message = "http_mode must be one of: allow, forward, reject"
   }
 }
 
