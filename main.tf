@@ -25,12 +25,35 @@ resource "aws_lb_listener_rule" "http_rule" {
     }
   }
 
-  action {
-    type = "redirect"
-    redirect {
-      port        = 443
-      protocol    = "HTTPS"
-      status_code = "HTTP_302"
+  dynamic "action" {
+    for_each = var.http_mode == "reject" ? [1] : []
+    content {
+      type = "fixed-response"
+      fixed_response {
+        content_type = "text/plain"
+        message_body = "Access Denied - Please Use HTTPS"
+        status_code  = "403"
+      }
+    }
+  }
+
+  dynamic "action" {
+    for_each = var.http_mode == "forward" ? [1] : []
+    content {
+      type = "redirect"
+      redirect {
+        port        = 443
+        protocol    = "HTTPS"
+        status_code = "HTTP_302"
+      }
+    }
+  }
+
+  dynamic "action" {
+    for_each = var.http_mode == "allow" ? [1] : []
+    content {
+      type             = "forward"
+      target_group_arn = aws_lb_target_group.target_group.arn
     }
   }
 }
