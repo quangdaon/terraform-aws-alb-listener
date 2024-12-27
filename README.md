@@ -5,7 +5,7 @@ This module is designed to be compatible with my "[quinfrastructure](https://git
 ## Usage
 
 ```hcl
-module "mtg_bans_alb" {
+module "my_app_alb" {
   source  = "app.terraform.io/Quangdao/alb-listener/aws"
   version = "0.0.2"
 
